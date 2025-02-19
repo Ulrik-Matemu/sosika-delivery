@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Sosika Delivery Guy</title>
+    <link rel="stylesheet" href="src/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
+        rel="stylesheet">
+        <link rel="manifest" href="/manifest.json">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://kit.fontawesome.com/1581a3bb2a.js" crossorigin="anonymous"></script>
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; }
+        #map { width: 100%; height: 100vh; }
+    </style>
+    </head>
+<body>
+    <div id="map"></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiLS11bHJpa2siLCJhIjoiY203YzV5dHIyMGY3NjJqc2Q5MmpxNm4ycCJ9.TilyKOmKcw2ekL2PY8Xofw'; // Replace with your token
+
+        // Initialize the map
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [0, 0], // Default center (will update to user's location)
+            zoom: 13
+        });
+
+        // Add a marker for the user's location
+        const userMarker = new mapboxgl.Marker().setLngLat([0, 0]).addTo(map);
+
+        // Function to update location
+        function updateLocation(position) {
+            const lng = position.coords.longitude;
+            const lat = position.coords.latitude;
+
+            userMarker.setLngLat([lng, lat]);
+            map.setCenter([lng, lat]);
+        }
+
+        // Track live location
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(updateLocation, 
+                error => console.log("Geolocation error:", error), 
+                { enableHighAccuracy: true }
+            );
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    </script>
+
+
+    <div class="navigation">
+        <div class="navigation-container">
+            <div class="add" onclick="navigateProfile()">
+                <div class="add-icon">
+                    <i class="fa fa-user"></i>
+                </div>
+                
+            </div>
+            <div class="home" onclick="navigateHome()">
+                <div class="home-icon">
+                    <i class="fa fa-home"></i>
+                </div>
+                
+            </div>
+            <div class="order-nav" onclick="navigateOrders()">
+                <div class="order-icon">
+                    <i class="fa fa-eye"></i>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+    <style>
+        #greeting {
+            font-size: 20px;
+        }
+    </style>
+    <script>
+        const nameOfDeliveryGuy = localStorage.getItem('deliveryPersonName');
+
+        const greetingElement = document.getElementById('greeting');
+            const currentHour = new Date().getHours();
+            let greeting;
+
+            if (currentHour < 12) {
+                greeting = 'Good Morning';
+            } else if (currentHour < 18) {
+                greeting = 'Good Afternoon';
+            } else {
+                greeting = 'Good Evening';
+            }
+
+            greetingElement.textContent = `${greeting}, ${nameOfDeliveryGuy}`;
+
+
+            function navigateAddItem() {
+                window.location.href = 'add-menu.html';
+            }
+
+            function navigateMenuItems() {
+                window.location.href = 'menu-items.html';
+            }
+            
+            function navigateOrders() {
+                window.location.href = 'orders.html';
+            }
+            function navigateProfile() {
+                window.location.href = 'profile.html';
+            }
+            function navigateHome() {
+                window.location.href = 'dashboard.html';
+            }
+    </script>
+</body>
+</html>

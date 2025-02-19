@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Registration - Sosika</title>
+    <link rel="stylesheet" href="src/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
+        rel="stylesheet">
+        <link rel="manifest" href="/manifest.json">
+</head>
+
+<body>
+    <div id="backButtonContainer">
+  <button id="backButton" onclick="(window.history.length > 1) ? window.history.back() : window.location.href = '/'">
+    &#8592; Back
+  </button>
+  <style>
+    #backButton {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      padding: 10px 15px;
+      background-color: #317EFB;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: background 0.3s;
+    }
+    #backButton:hover {
+      background-color: #0056b3;
+    }
+    @media (max-width: 600px) {
+      #backButton {
+        font-size: 10px;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</div>
+
+    <section class="welcome">
+        <h1>Sosika</h1>
+        <h2>Welcome To Sosika!</h2>
+    </section>
+    <section class="auth">
+        <div class="login-container">
+            <form>
+                <div class="input">
+                    <label for="name">Full Name</label>
+                    <input type="text" name="name" id="name" required>
+                </div>
+                <div class="input">
+                    <label for="phone">Phone Number</label>
+                    <input type="number" name="phone" id="phone" required>
+                </div>
+                <div class="input">
+                    <label for="college">Institute</label>
+                    <select name="college" id="college" required>
+                        <option value="1">College 1</option>
+                        <option value="2">College 2</option>
+                    </select>
+                </div>
+                <div class="input">
+                    <label for="location">Your Location</label>
+                    <button type="button" id="get-location">Get My Location</button>
+                    <input type="hidden" name="latitude" id="latitude" required>
+                    <input type="hidden" name="longitude" id="longitude" required>
+                </div>
+                <div class="input">
+                    <label for="transport-type">Mode of Transport</label>
+                    <select name="transport-type" id="transport-type" required>
+                        <option value="foot">Foot</option>
+                        <option value="bicycle">Bicycle</option>
+                        <option value="motocycle">Motorcycle</option>
+                        <option value="car">Car</option>
+                    </select>
+                </div>
+
+                <div class="input">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required>
+                </div>
+                <div class="input">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" name="confirm-password" id="confirm-password" required>
+                </div>
+                <div class="form-button">
+                    <button type="submit">REGISTER</button>
+                </div>
+            </form>
+            
+        </div>
+        <p style="text-align: center;">Already a Vendor on Sosika? Login <a href="index.html">here.</a></p>
+    </section>
+   
+  
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const getLocationButton = document.getElementById("get-location");
+            const latitudeInput = document.getElementById("latitude");
+            const longitudeInput = document.getElementById("longitude");
+            const locationStatus = document.getElementById("location-status");
+        
+            getLocationButton.addEventListener("click", function () {
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        function (position) {
+                            const lat = position.coords.latitude;
+                            const lng = position.coords.longitude;
+        
+                            latitudeInput.value = lat;
+                            longitudeInput.value = lng;
+                            locationStatus.innerText = `Location set: ${lat}, ${lng}`;
+                        },
+                        function (error) {
+                            locationStatus.innerText = "Location access denied. Please allow location permissions.";
+                        }
+                    );
+                } else {
+                    locationStatus.innerText = "Geolocation is not supported by your browser.";
+                }
+            });
+        });
+        </script>
+         <script src="src/register.js" type="module"></script>
+        
+</body>
+
+</html>
