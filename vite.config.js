@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import path from 'path';
 
 export default defineConfig({
   base: '/sosika-delivery/',
@@ -19,5 +20,13 @@ export default defineConfig({
         ],
       }
     })
-  ]
+  ],
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        home: path.resolve(__dirname, 'home.html'),
+      },
+    },
+  },
 });
