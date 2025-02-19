@@ -18,10 +18,11 @@
         body, html { margin: 0; padding: 0; height: 100%; }
         #map { width: 100%; height: 100vh; }
     </style>
-      <link rel="stylesheet" crossorigin href="/sosika-delivery/assets/style-DTKjZcaZ.css">
+      <link rel="stylesheet" crossorigin href="/sosika-delivery/assets/style-BCVt5T5S.css">
     <link rel="manifest" href="/sosika-delivery/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/sosika-delivery/registerSW.js"></script></head>
 <body>
     <div id="map"></div>
+    <button id="toggleButton" class="floating-button">Go Online</button>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiLS11bHJpa2siLCJhIjoiY203YzV5dHIyMGY3NjJqc2Q5MmpxNm4ycCJ9.TilyKOmKcw2ekL2PY8Xofw'; // Replace with your token
 
@@ -83,6 +84,30 @@
         #greeting {
             font-size: 20px;
         }
+
+/* Floating Button Styling */
+.floating-button {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s;
+}
+
+.floating-button:hover {
+    background-color: #218838;
+}
+
+.floating-button.active {
+    background-color: #dc3545;
+}
     </style>
     <script>
         const nameOfDeliveryGuy = localStorage.getItem('deliveryPersonName');
@@ -119,6 +144,36 @@
             function navigateHome() {
                 window.location.href = 'dashboard.html';
             }
+    </script>
+    <script>
+   document.addEventListener("DOMContentLoaded", function () {
+    const toggleButton = document.getElementById("toggleButton");
+    const deliveryPersonId = localStorage.getItem('deliveryPersonId'); // Replace with actual logged-in delivery person's ID
+
+    toggleButton.addEventListener("click", async function () {
+        try {
+            const response = await fetch(`http://localhost:3001/api/deliveryPerson/${deliveryPersonId}/toggle-active`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                toggleButton.textContent = data.is_active ? "Go Offline" : "Go Online";
+                toggleButton.classList.toggle("active", data.is_active);
+                console.log("Updated status:", data.is_active);
+            } else {
+                console.error("Error:", data.message);
+            }
+        } catch (error) {
+            console.error("Failed to toggle status:", error);
+        }
+    });
+});
+
+
     </script>
 </body>
 </html>
