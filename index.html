@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Guy PWA</title>
+    <link rel="manifest" href="/sosika-delivery/manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
+        rel="stylesheet">
+        <link rel="manifest" href="/sosika-delivery/manifest.json">
+
+  <script type="module" crossorigin src="/sosika-delivery/assets/index-BuqdKFvt.js"></script>
+  <link rel="stylesheet" crossorigin href="/sosika-delivery/assets/index-DTKjZcaZ.css">
+<link rel="manifest" href="/sosika-delivery/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/sosika-delivery/registerSW.js"></script></head>
+
+<body>
+    <section class="welcome">
+        <h1>Sosika</h1>
+        <h2>Welcome Back!</h2>
+    </section>
+    <section class="auth">
+        <div class="login-container">
+            <form>
+                <div class="input">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name" required>
+                </div>
+                <div class="input">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required>
+                </div>
+
+                <div class="form-button">
+                    <button type="submit">LOGIN</button>
+                </div>
+            </form>
+            
+        </div>
+        <p style="text-align: center;">New on Sosika? Become a Vendor Today! Sign up <a href="register.html">here.</a></p>
+    </section>
+    <script>
+      if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js").then(() => {
+    console.log("Service Worker Registered");
+  });
+}
+
+    </script>
+</body>
+
+</html>
