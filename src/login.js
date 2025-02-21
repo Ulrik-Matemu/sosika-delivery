@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
             password: document.getElementById('password').value
         };
 
-        fetch('http://localhost:3001/api/deliveryPerson/login', {
+        fetch('http://localhost:3000/api/deliveryPerson/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Login successful!');
                 localStorage.setItem('deliveryPersonName', data.deliveryPersonName);
                 localStorage.setItem('deliveryPersonId', data.deliveryPersonId);
+                localStorage.setItem('deliveryPersonLatitude', data.deliveryPersonLatitude);
+                localStorage.setItem('deliveryPersonLongitude', data.deliveryPersonLongitude);
                 window.location.href = 'home.html';
             } else {
                 alert('Login failed: ' + data.message);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,52 +11,41 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
-        <link rel="manifest" href="/manifest.json">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <script src="https://kit.fontawesome.com/1581a3bb2a.js" crossorigin="anonymous"></script>
-        <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/1581a3bb2a.js" crossorigin="anonymous"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; }
-        #map { width: 100%; height: 100vh; }
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
     </style>
-    </head>
+    <style>
+
+    </style>
+</head>
+
 <body>
     <div id="map"></div>
     <button id="toggleButton" class="floating-button">Go Online</button>
-    <script>
-        mapboxgl.accessToken = 'pk.eyJ1IjoiLS11bHJpa2siLCJhIjoiY203YzV5dHIyMGY3NjJqc2Q5MmpxNm4ycCJ9.TilyKOmKcw2ekL2PY8Xofw'; // Replace with your token
 
-        // Initialize the map
-        const map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [-3.3977, 36.7476], // Default center (will update to user's location)
-            zoom: 20
-        });
 
-        // Add a marker for the user's location
-        const userMarker = new mapboxgl.Marker().setLngLat([0, 0]).addTo(map);
-
-        // Function to update location
-        function updateLocation(position) {
-            const lng = position.coords.longitude;
-            const lat = position.coords.latitude;
-
-            userMarker.setLngLat([lng, lat]);
-            map.setCenter([lng, lat]);
-        }
-
-        // Track live location
-        if (navigator.geolocation) {
-            navigator.geolocation.watchPosition(updateLocation, 
-                error => console.log("Geolocation error:", error), 
-                { enableHighAccuracy: true }
-            );
-        } else {
-            alert("Geolocation is not supported by your browser.");
-        }
-    </script>
+    <div id="orderNotification">
+        <p id="btn-acc-dec3"><strong>New Order Available</strong></p>
+        <p>Order Number: <span id="orderNumber"></span></p>
+        <button class="accept-btn" id="btn-acc-dec" onclick="acceptOrder()">Accept</button>
+        <button class="decline-btn" id="btn-acc-dec2" onclick="declineOrder()">Decline</button>
+    </div>
 
 
     <div class="navigation">
@@ -64,116 +54,54 @@
                 <div class="add-icon">
                     <i class="fa fa-user"></i>
                 </div>
-                
+
             </div>
             <div class="home" onclick="navigateHome()">
                 <div class="home-icon">
                     <i class="fa fa-home"></i>
                 </div>
-                
+
             </div>
-            <div class="order-nav" onclick="navigateOrders()">
+            <div class="order-nav" onclick="toggleLocation()">
                 <div class="order-icon">
-                    <i class="fa fa-eye"></i>
+                    <i class="fa fa-map-marker"></i>
                 </div>
-               
+
             </div>
         </div>
-    </div>
-    <style>
-        #greeting {
-            font-size: 20px;
-        }
+        <script>
+              mapboxgl.accessToken = 'pk.eyJ1IjoiLS11bHJpa2siLCJhIjoiY203YzV5dHIyMGY3NjJqc2Q5MmpxNm4ycCJ9.TilyKOmKcw2ekL2PY8Xofw';
 
-/* Floating Button Styling */
-.floating-button {
-    position: fixed;
-    bottom: 100px;
-    right: 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 12px 18px;
-    font-size: 16px;
-    border-radius: 50px;
-    cursor: pointer;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    transition: background 0.3s;
+function toggleLocation() {
+   
+        showLocationOnMap();
+  
 }
 
-.floating-button:hover {
-    background-color: #218838;
-}
-
-.floating-button.active {
-    background-color: #dc3545;
-}
-    </style>
-    <script>
-        const nameOfDeliveryGuy = localStorage.getItem('deliveryPersonName');
-
-        const greetingElement = document.getElementById('greeting');
-            const currentHour = new Date().getHours();
-            let greeting;
-
-            if (currentHour < 12) {
-                greeting = 'Good Morning';
-            } else if (currentHour < 18) {
-                greeting = 'Good Afternoon';
-            } else {
-                greeting = 'Good Evening';
-            }
-
-            greetingElement.textContent = `${greeting}, ${nameOfDeliveryGuy}`;
 
 
-            function navigateAddItem() {
-                window.location.href = 'add-menu.html';
-            }
-
-            function navigateMenuItems() {
-                window.location.href = 'menu-items.html';
-            }
-            
-            function navigateOrders() {
-                window.location.href = 'orders.html';
-            }
-            function navigateProfile() {
-                window.location.href = 'profile.html';
-            }
-            function navigateHome() {
-                window.location.href = 'dashboard.html';
-            }
-    </script>
-    <script>
-   document.addEventListener("DOMContentLoaded", function () {
-    const toggleButton = document.getElementById("toggleButton");
-    const deliveryPersonId = localStorage.getItem('deliveryPersonId'); // Replace with actual logged-in delivery person's ID
-
-    toggleButton.addEventListener("click", async function () {
-        try {
-            const response = await fetch(`http://localhost:3001/api/deliveryPerson/${deliveryPersonId}/toggle-active`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                toggleButton.textContent = data.is_active ? "Go Offline" : "Go Online";
-                toggleButton.classList.toggle("active", data.is_active);
-                console.log("Updated status:", data.is_active);
-            } else {
-                console.error("Error:", data.message);
-            }
-        } catch (error) {
-            console.error("Failed to toggle status:", error);
-        }
+function showLocationOnMap() {
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [-74.0060, 40.7128], // Default coordinates (New York City)
+        zoom: 13
     });
-});
 
+    // Replace with actual delivery person coordinates
+    const deliveryPersonCoordinates = [-74.0060, 40.7128];
 
-    </script>
+    new mapboxgl.Marker()
+        .setLngLat(deliveryPersonCoordinates)
+        .setPopup(new mapboxgl.Popup().setText('Delivery Person Location'))
+        .addTo(map);
+}
+        </script>
+    </div>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="src/map.js"></script>
+    <script src="src/toggle-active.js"></script>
+   
 </body>
+
 </html>
