@@ -62,7 +62,7 @@
                 </div>
 
             </div>
-            <div class="order-nav" onclick="toggleLocation()">
+            <div class="order-nav" onclick="showLocationOnMap()">
                 <div class="order-icon">
                     <i class="fa fa-map-marker"></i>
                 </div>
@@ -71,30 +71,55 @@
         </div>
         <script>
               mapboxgl.accessToken = 'pk.eyJ1IjoiLS11bHJpa2siLCJhIjoiY203YzV5dHIyMGY3NjJqc2Q5MmpxNm4ycCJ9.TilyKOmKcw2ekL2PY8Xofw';
-
-function toggleLocation() {
-   
-        showLocationOnMap();
-  
-}
+              let map = document.getElementById('map'); // Global map instance
 
 
+// Store the marker instance
 
 function showLocationOnMap() {
-    const map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [-74.0060, 40.7128], // Default coordinates (New York City)
-        zoom: 13
+    if (!navigator.geolocation) {
+        console.error('Geolocation is not supported by your browser');
+        return;
+    }
+
+    console.log('Getting location...');
+
+    navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+
+        if (!map) {
+            // Initialize the map only if it doesn't exist
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: [longitude, latitude],
+                zoom: 13
+            });
+
+            marker = new mapboxgl.Marker()
+                .setLngLat([longitude, latitude])
+                .setPopup(new mapboxgl.Popup().setText('Your Location'))
+                .addTo(map);
+        } else {
+            // If map exists, smoothly pan to the new location
+            map.flyTo({
+                center: [longitude, latitude],
+                zoom: 17,
+                essential: true
+            });
+
+            if (marker) {
+                marker.setLngLat([longitude, latitude]);
+            } else {
+                marker = new mapboxgl.Marker()
+                    .setLngLat([longitude, latitude])
+                    .setPopup(new mapboxgl.Popup().setText('Your Location'))
+                    .addTo(map);
+            }
+        }
+    }, (error) => {
+        console.error('Error getting location:', error);
     });
-
-    // Replace with actual delivery person coordinates
-    const deliveryPersonCoordinates = [-74.0060, 40.7128];
-
-    new mapboxgl.Marker()
-        .setLngLat(deliveryPersonCoordinates)
-        .setPopup(new mapboxgl.Popup().setText('Delivery Person Location'))
-        .addTo(map);
 }
         </script>
     </div>
