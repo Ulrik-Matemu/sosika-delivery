@@ -184,6 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     alert("Order status changed back to 'In-Progress'. Please check your assigned orders.");
                     removeOrderMarkers();
                     localStorage.removeItem("assignedOrder");
+                    location.reload();
                 } else {
                     console.log("Restoring assigned order:", orderDetails);
                     addOrderMarkers(orderDetails.pickup_location, orderDetails.dropoff_location);
@@ -216,7 +217,7 @@ const map = new mapboxgl.Map({
 const userMarker = new mapboxgl.Marker().setLngLat([0, 0]).addTo(map);
 
 // Function to update location
-function updateLocation(position) {
+function updateLocationFirst(position) {
     const lng = position.coords.longitude;
     const lat = position.coords.latitude;
 
@@ -226,7 +227,7 @@ function updateLocation(position) {
 
 // Track live location
 if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(updateLocation,
+    navigator.geolocation.watchPosition(updateLocationFirst,
         error => console.log("Geolocation error:", error),
         { enableHighAccuracy: true }
     );

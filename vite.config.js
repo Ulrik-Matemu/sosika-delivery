@@ -26,6 +26,7 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, 'index.html'),
         home: path.resolve(__dirname, 'home.html'),
+        profile: path.resolve(__dirname, 'profile.html'),
       },
     },
   },
