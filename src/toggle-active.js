@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     toggleButton.addEventListener("click", async function () {
         try {
-            const response = await fetch(`http://localhost:3000/api/deliveryPerson/${deliveryPersonId}/toggle-active`, {
+            const response = await fetch(`https://sosika-backend.onrender.com/api/deliveryPerson/${deliveryPersonId}/toggle-active`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"

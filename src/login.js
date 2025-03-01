@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
             password: document.getElementById('password').value
         };
 
-        fetch('http://localhost:3000/api/deliveryPerson/login', {
+        fetch('https://sosika-backend.onrender.com/api/deliveryPerson/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

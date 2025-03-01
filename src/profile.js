@@ -1,5 +1,5 @@
 const deliveryPersonId = localStorage.getItem('deliveryPersonId');
-const API_URL =  `http://localhost:3000/api/deliveryPerson/${deliveryPersonId}`;
+const API_URL =  `https://sosika-backend.onrender.com/api/deliveryPerson/${deliveryPersonId}`;
 
 const fetchDeliveryPersonDetails = async () => {
     try {

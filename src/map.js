@@ -1,4 +1,4 @@
-const socket = io("http://localhost:3000");
+const socket = io("https://sosika-backend.onrender.com");
 const deliveryPersonId = localStorage.getItem("deliveryPersonId");
 let orderDetails;
 let pickupMarker = null;
@@ -21,7 +21,7 @@ socket.on("newOrderAvailable", (data) => {
 });
 
 // Accept Order
-function acceptOrder() {
+window.acceptOrder = function() {
     console.log("Order accepted");
     document.getElementById("btn-acc-dec").style.display = "none";
     document.getElementById("btn-acc-dec2").style.display = "none";
@@ -29,7 +29,7 @@ function acceptOrder() {
 
     socket.emit("acceptOrder", { orderId: orderDetails.orderId, deliveryPersonId });
 
-    fetch(`http://localhost:3000/api/orders/${orderDetails.orderId}/accept`, {
+    fetch(`https://sosika-backend.onrender.com/api/orders/${orderDetails.orderId}/accept`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ delivery_person_id: deliveryPersonId }),
@@ -108,9 +108,25 @@ function getRoute(start, end) {
     const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${start.y},${start.x};${end.x},${end.y}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
     fetch(url)
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+            return response.json();
+        })
         .then((data) => {
+            console.log("API Response:", data); // Debugging log
+
+            if (!data.routes || data.routes.length === 0) {
+                throw new Error("No route found in response.");
+            }
+
             const route = data.routes[0].geometry;
+            console.log("Extracted Route Geometry:", route);
+
+            if (!route) {
+                throw new Error("Route geometry is missing.");
+            }
 
             if (map.getSource("route")) {
                 map.getSource("route").setData({
@@ -119,24 +135,27 @@ function getRoute(start, end) {
                     geometry: route,
                 });
             } else {
+                map.addSource("route", {
+                    type: "geojson",
+                    data: {
+                        type: "Feature",
+                        properties: {},
+                        geometry: route,
+                    },
+                });
+
                 map.addLayer({
                     id: "route",
                     type: "line",
-                    source: {
-                        type: "geojson",
-                        data: {
-                            type: "Feature",
-                            properties: {},
-                            geometry: route,
-                        },
-                    },
+                    source: "route",
                     layout: { "line-join": "round", "line-cap": "round" },
                     paint: { "line-color": "#1DB954", "line-width": 5, "line-opacity": 0.8 },
                 });
             }
         })
-        .catch((error) => console.log("Error fetching route:", error));
+        .catch((error) => console.error("Error fetching route:", error));
 }
+
 
 // Decline Order
 function declineOrder() {
@@ -168,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
                 // Fetch latest order status from backend
                 console.log(orderDetails);
-                const response = await fetch(`http://localhost:3000/api/orders/${orderDetails.orderId}`);
+                const response = await fetch(`https://sosika-backend.onrender.com/api/orders/${orderDetails.orderId}`);
                 const latestOrder = await response.json();
                 console.log(latestOrder);
 
@@ -248,7 +267,7 @@ async function updateLocation() {
         const DELIVERY_PERSON_ID = localStorage.getItem('deliveryPersonId'); // Ensure ID is stored
 
         try {
-            const response = await fetch(`http://localhost:3000/api/deliveryPerson/update-location/${DELIVERY_PERSON_ID}`, {
+            const response = await fetch(`https://sosika-backend.onrender.com/api/deliveryPerson/update-location/${DELIVERY_PERSON_ID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

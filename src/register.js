@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         try {
-            const response = await fetch("http://localhost:3000/api/deliveryPerson", {
+            const response = await fetch("https://sosika-backend.onrender.com/api/deliveryPerson", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
