@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
+import { register } from 'module';
 
 export default defineConfig({
   base: '/sosika-delivery/',
@@ -27,6 +28,7 @@ export default defineConfig({
         main: path.resolve(__dirname, 'index.html'),
         home: path.resolve(__dirname, 'home.html'),
         profile: path.resolve(__dirname, 'profile.html'),
+        register: path.resolve(__dirname, 'register.html'),
       },
     },
   },
