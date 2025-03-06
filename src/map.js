@@ -68,7 +68,7 @@ function addOrderMarkers(pickupLocation, dropoffLocation) {
 
     // Add Dropoff Marker
     dropoffMarker = new mapboxgl.Marker({ element: dropOffDiv })
-        .setLngLat([dropoffLocation.x, dropoffLocation.y])
+        .setLngLat([dropoffLocation.y, dropoffLocation.x])
         .setPopup(new mapboxgl.Popup().setText("Dropoff location"))
         .addTo(map);
 
