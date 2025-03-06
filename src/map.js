@@ -62,13 +62,13 @@ function addOrderMarkers(pickupLocation, dropoffLocation) {
 
     // Add Pickup Marker
     pickupMarker = new mapboxgl.Marker({ element: pickupDiv })
-        .setLngLat([pickupLocation.y, pickupLocation.x]) // Fixed lat/lng order
+        .setLngLat([pickupLocation.x, pickupLocation.y]) // Fixed lat/lng order
         .setPopup(new mapboxgl.Popup().setText("Pickup location"))
         .addTo(map);
 
     // Add Dropoff Marker
     dropoffMarker = new mapboxgl.Marker({ element: dropOffDiv })
-        .setLngLat([dropoffLocation.y, dropoffLocation.x])
+        .setLngLat([dropoffLocation.x, dropoffLocation.y])
         .setPopup(new mapboxgl.Popup().setText("Dropoff location"))
         .addTo(map);
 
