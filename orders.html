@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>orders</title>
+<link rel="manifest" href="/sosika-delivery/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/sosika-delivery/registerSW.js"></script></head>
+<body>
+    <div id="orders-list"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+    const ordersContainer = document.getElementById("orders-list");
+    const deliveryPersonId = localStorage.getItem("deliveryPersonId");
+    
+    async function fetchUnassignedOrders() {
+        try {
+            const response = await fetch("https://sosika-backend.onrender.com/api/orders/in-progress/unassigned");
+            const orders = await response.json();
+            displayOrders(orders);
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+        }
+    }
+    
+    function displayOrders(orders) {
+        ordersContainer.innerHTML = "";
+        if (orders.length === 0) {
+            ordersContainer.innerHTML = "<p>No orders available</p>";
+            return;
+        }
+        
+        orders.forEach(order => {
+            const orderElement = document.createElement("div");
+            orderElement.className = "order-item";
+            orderElement.innerHTML = `
+                <p><strong>Order ID:</strong> ${order.id}</p>
+                <p><strong>Total Amount:</strong> $${order.total_amount}</p>
+                <button class="accept-btn" data-order-id="${order.id}">Accept</button>
+            `;
+            
+            orderElement.querySelector(".accept-btn").addEventListener("click", async function () {
+                acceptOrder(order.id);
+            });
+            
+            ordersContainer.appendChild(orderElement);
+        });
+    }
+    
+    async function acceptOrder(orderId) {
+        try {
+            const response = await fetch(`https://sosika-backend.onrender.com/api/orders/${orderId}/accept`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ delivery_person_id: deliveryPersonId })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert("Order accepted successfully");
+                fetchUnassignedOrders();
+            } else {
+                alert(data.error || "Failed to accept order");
+            }
+        } catch (error) {
+            console.error("Error accepting order:", error);
+        }
+    }
+    
+    fetchUnassignedOrders();
+    setInterval(fetchUnassignedOrders, 10000);
+});
+
+    </script>
+</body>
+</html>
