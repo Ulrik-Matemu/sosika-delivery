@@ -60,25 +60,29 @@ dropOffDiv.innerHTML = `<div style="background-color: Red; color: white; padding
 function addOrderMarkers(pickupLocation, dropoffLocation) {
     removeOrderMarkers(); // Clear previous markers
 
+    // Parse coordinates from string
+    const [pickupLat, pickupLng] = pickupLocation.replace(/[()]/g, '').split(',').map(Number);
+    const [dropoffLat, dropoffLng] = dropoffLocation.replace(/[()]/g, '').split(',').map(Number);
+
     // Add Pickup Marker
     pickupMarker = new mapboxgl.Marker({ element: pickupDiv })
-        .setLngLat([pickupLocation.x, pickupLocation.y]) // Fixed lat/lng order
+        .setLngLat([pickupLng, pickupLat]) // Fixed lat/lng order
         .setPopup(new mapboxgl.Popup().setText("Pickup location"))
         .addTo(map);
 
     // Add Dropoff Marker
     dropoffMarker = new mapboxgl.Marker({ element: dropOffDiv })
-        .setLngLat([dropoffLocation.x, dropoffLocation.y])
+        .setLngLat([dropoffLng, dropoffLat])
         .setPopup(new mapboxgl.Popup().setText("Dropoff location"))
         .addTo(map);
 
     // Adjust map bounds
     const bounds = new mapboxgl.LngLatBounds();
-    bounds.extend([pickupLocation.y, pickupLocation.x]);
-    bounds.extend([dropoffLocation.x, dropoffLocation.y]);
+    bounds.extend([pickupLng, pickupLat]);
+    bounds.extend([dropoffLng, dropoffLat]);
     map.fitBounds(bounds, { padding: 20 });
 
-    getRoute(pickupLocation, dropoffLocation);
+    getRoute({ x: pickupLat, y: pickupLng }, { x: dropoffLat, y: dropoffLng });
 }
 
 function removeRoute() {
@@ -105,7 +109,7 @@ function removeOrderMarkers() {
 
 // Fetch and Display Route
 function getRoute(start, end) {
-    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${start.y},${start.x};${end.x},${end.y}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${start.x},${start.y};${end.x},${end.y}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
     fetch(url)
         .then((response) => {
@@ -206,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     location.reload();
                 } else {
                     console.log("Restoring assigned order:", orderDetails);
-                    addOrderMarkers(orderDetails.pickup_location, orderDetails.dropoff_location);
+                    addOrderMarkers(latestOrder.pickup_location, latestOrder.dropoff_location);
                 }
             } catch (error) {
                 console.error("Error fetching order status:", error);

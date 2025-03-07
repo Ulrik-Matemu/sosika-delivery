@@ -29,6 +29,7 @@ export default defineConfig({
         home: path.resolve(__dirname, 'home.html'),
         profile: path.resolve(__dirname, 'profile.html'),
         register: path.resolve(__dirname, 'register.html'),
+        orders: path.resolve(__dirname, 'orders.html'),
       },
     },
   },
