@@ -42,13 +42,17 @@
     </section>
     <script src="src/login.js" type="module"></script>
     <script>
-      if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js").then(() => {
-    console.log("Service Worker Registered");
-  });
-}
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sosika-delivery/sw.js").then(() => {
+      console.log("Service Worker Registered: sw.js");
+    });
 
-    </script>
+    navigator.serviceWorker.register("/sosika-delivery/firebase-messaging-sw.js").then(() => {
+      console.log("Service Worker Registered: firebase-messaging-sw.js");
+    }).catch(err => console.error("Firebase SW registration failed", err));
+  }
+</script>
+
 </body>
 
 </html>
