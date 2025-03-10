@@ -44,11 +44,11 @@
     </section>
     <script>
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sosika-delivery/sw.js").then(() => {
+    navigator.serviceWorker.register("sw.js").then(() => {
       console.log("Service Worker Registered: sw.js");
     });
 
-    navigator.serviceWorker.register("/sosika-delivery/firebase-messaging-sw.js").then(() => {
+    navigator.serviceWorker.register("firebase-messaging-sw.js").then(() => {
       console.log("Service Worker Registered: firebase-messaging-sw.js");
     }).catch(err => console.error("Firebase SW registration failed", err));
   }
