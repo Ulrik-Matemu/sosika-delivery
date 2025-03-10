@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delivery Guy PWA</title>
-    <link rel="manifest" href="/sosika-delivery/manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
         rel="stylesheet">
-        <link rel="manifest" href="/sosika-delivery/manifest.json">
+        <link rel="manifest" href="/manifest.json">
 
-  <script type="module" crossorigin src="/sosika-delivery/assets/main-p5padvMK.js"></script>
-  <link rel="modulepreload" crossorigin href="/sosika-delivery/assets/style-ETqBUHLR.js">
-  <link rel="stylesheet" crossorigin href="/sosika-delivery/assets/style-BqrjYQyD.css">
-<link rel="manifest" href="/sosika-delivery/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/sosika-delivery/registerSW.js"></script></head>
+  <script type="module" crossorigin src="/assets/main-5ID1ygpZ.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/style-ETqBUHLR.js">
+  <link rel="stylesheet" crossorigin href="/assets/style-BqrjYQyD.css">
+<link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
 
 <body>
     <section class="welcome">
@@ -43,13 +43,16 @@
         <p style="text-align: center;">New on Sosika? Become a Vendor Today! Sign up <a href="register.html">here.</a></p>
     </section>
     <script>
-      if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js").then(() => {
-    console.log("Service Worker Registered");
-  });
-}
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js").then(() => {
+      console.log("Service Worker Registered: sw.js");
+    });
 
-    </script>
+    navigator.serviceWorker.register("/firebase-messaging-sw.js").then(() => {
+      console.log("Service Worker Registered: firebase-messaging-sw.js");
+    }).catch(err => console.error("Firebase SW registration failed", err));
+  }
+</script>
 </body>
 
 </html>
