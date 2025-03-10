@@ -30,6 +30,8 @@ export default defineConfig({
         profile: path.resolve(__dirname, 'profile.html'),
         register: path.resolve(__dirname, 'register.html'),
         orders: path.resolve(__dirname, 'orders.html'),
+        sw: path.resolve(__dirname, 'public/sw.js'),
+        firebaseSw: path.resolve(__dirname, 'public/firebase-messaging-sw.js')
       },
     },
   },
