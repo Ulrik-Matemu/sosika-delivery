@@ -1,7 +1,7 @@
 {
     "name": "Sosika Delivery Guy",
     "short_name": "SosikaG",
-    "start_url": "/sosika-delivery/",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#e7e7e7",
     "theme_color": "#2b2b2b",
