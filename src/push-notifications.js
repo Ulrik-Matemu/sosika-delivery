@@ -1,12 +1,13 @@
 import { messaging, getToken, onMessage } from "./firebase";
 
+
 async function requestNotificationPermission() {
     try {
         const permission = await Notification.requestPermission();
 
         if (permission === "granted") {
             console.log("Notification permission granted.");
-            const token = await getToken(messaging, { vapidKey: "BEC4ncuS652Wnb0J2QC2M2ylbtdpwHXj7NVEHrprgj1PcvHjZpo2jID6-YGKCXSy25P5mTrVWlJmzQhWIzoLJ_k" });
+            const token = await getToken(messaging, { vapidKey: import.meta.env.VITE_FIREBASE_VAPID });
          
             localStorage.setItem("FCMToken", token);
             console.log("FCM Token received and stored:", token);
