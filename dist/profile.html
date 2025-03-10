@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Delivery Person Profile - Sosika</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
+        rel="stylesheet">
+  <script type="module" crossorigin src="/sosika-delivery/assets/profile-CyAtvuZT.js"></script>
+  <link rel="modulepreload" crossorigin href="/sosika-delivery/assets/style-ETqBUHLR.js">
+  <link rel="stylesheet" crossorigin href="/sosika-delivery/assets/style-BqrjYQyD.css">
+<link rel="manifest" href="/sosika-delivery/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/sosika-delivery/registerSW.js"></script></head>
+<body>
+    <div id="backButtonContainer">
+        <button id="backButton" onclick="(window.history.length > 1) ? window.history.back() : window.location.href = '/'">
+          &#8592; Back
+        </button>
+        <style>
+          #backButton {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      padding: 10px 15px;
+      background-color: #317EFB;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: background 0.3s;
+    }
+    #backButton:hover {
+      background-color: #0056b3;
+    }
+    @media (max-width: 600px) {
+      #backButton {
+        font-size: 10px;
+        padding: 8px 12px;
+      }
+    }
+        </style>
+      </div>
+      
+    <h1 class="title"><span>Sosika</span> Delivery Person Dashboard</h1>
+    <section class="update-profile">
+        <h1 style="text-align: center;">Update  Profile</h1>
+        <p id="loading-text">Loading profile details...</p>
+
+        <div class="login-container">
+            <form id="deliveryPerson-form">
+                <div class="input">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name">
+                </div>
+
+                <div class="input">
+                    <label for="phone">Phone Number</label>
+                    <input type="number" id="phone">
+                </div>
+
+                <div class="input">
+                    <label for="email">Email</label>
+                    <input type="email" id="email">
+                </div>
+
+
+               
+
+                <div class="submit-button">
+                    <button type="submit">Update Profile</button>
+                </div>
+                
+            </form>
+
+            <p id="message"></p>
+        </div>
+    </section>
+    <div class="navigation">
+        <div class="navigation-container">
+            <div class="add" onclick="navigateAddItem()">
+                <div class="add-icon">
+                    <i class="fa fa-plus"></i>
+                </div>
+                
+            </div>
+            <div class="home" onclick="navigateHome()">
+                <div class="home-icon">
+                    <i class="fa fa-home"></i>
+                </div>
+                
+            </div>
+            <div class="order-nav" onclick="navigateOrders()">
+                <div class="order-icon">
+                    <i class="fa fa-eye"></i>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
