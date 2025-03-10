@@ -20,6 +20,6 @@ messaging.onBackgroundMessage((payload) => {
     console.log('Received background message: ', payload);
     self.registration.showNotification(payload.notification.title, {
         body: payload.notification.body,
-        icon: '/sosika-delivery/icon.png',
+        icon: '/icon.png',
     });
 });

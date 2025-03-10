@@ -1,3 +1,5 @@
+const fcmToken = localStorage.getItem("FCMToken");
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
 
@@ -6,7 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = {
             fullName: document.getElementById('name').value,
-            password: document.getElementById('password').value
+            password: document.getElementById('password').value,
+            fcmToken: fcmToken
         };
 
         fetch('https://sosika-backend.onrender.com/api/deliveryPerson/login', {

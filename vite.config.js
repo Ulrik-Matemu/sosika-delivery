@@ -4,7 +4,7 @@ import path from 'path';
 import { register } from 'module';
 
 export default defineConfig({
-  base: '/sosika-delivery/',
+  base: '/',
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
