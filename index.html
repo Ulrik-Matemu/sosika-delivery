@@ -42,23 +42,23 @@
     </section>
     <script src="src/login.js" type="module"></script>
     <script>
-  if ("serviceWorker" in navigator) {
-  // Get the current deployment path
-  const deployPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+ if ("serviceWorker" in navigator) {
+  // Regular service worker
+  navigator.serviceWorker.register("sw.js")
+    .then(reg => console.log("SW registered:", reg.scope))
+    .catch(err => console.error("SW registration failed:", err));
   
-  // For the regular service worker
-  navigator.serviceWorker.register(`${deployPath}sw.js`, {
-    scope: deployPath
-  }).then(() => {
-    console.log("Service Worker Registered: sw.js with scope:", deployPath);
-  });
-
-  // For the Firebase messaging service worker
-  navigator.serviceWorker.register(`${deployPath}firebase-messaging-sw.js`, {
-    scope: deployPath
-  }).then(() => {
-    console.log("Service Worker Registered: firebase-messaging-sw.js with scope:", deployPath);
-  }).catch(err => console.error("Firebase SW registration failed", err));
+  // For Firebase, we need a special approach for GitHub Pages
+  const firebaseSWUrl = new URL("firebase-messaging-sw.js", window.location.href);
+  
+  navigator.serviceWorker.register(firebaseSWUrl.href, {
+    scope: '/' + firebaseSWUrl.pathname.split('/').slice(1, -1).join('/') + '/'
+  })
+    .then(reg => console.log("Firebase SW registered with scope:", reg.scope))
+    .catch(err => {
+      console.error("Firebase SW registration failed:", err);
+      console.log("Attempted URL:", firebaseSWUrl.href);
+    });
 }
 </script>
 <script type="module" src="src/main.js"></script>
