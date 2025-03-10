@@ -43,14 +43,23 @@
     <script src="src/login.js" type="module"></script>
     <script>
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sosika-delivery/sw.js").then(() => {
-      console.log("Service Worker Registered: sw.js");
-    });
+  // Get the current deployment path
+  const deployPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+  
+  // For the regular service worker
+  navigator.serviceWorker.register(`${deployPath}sw.js`, {
+    scope: deployPath
+  }).then(() => {
+    console.log("Service Worker Registered: sw.js with scope:", deployPath);
+  });
 
-    navigator.serviceWorker.register("/sosika-delivery/firebase-messaging-sw.js").then(() => {
-      console.log("Service Worker Registered: firebase-messaging-sw.js");
-    }).catch(err => console.error("Firebase SW registration failed", err));
-  }
+  // For the Firebase messaging service worker
+  navigator.serviceWorker.register(`${deployPath}firebase-messaging-sw.js`, {
+    scope: deployPath
+  }).then(() => {
+    console.log("Service Worker Registered: firebase-messaging-sw.js with scope:", deployPath);
+  }).catch(err => console.error("Firebase SW registration failed", err));
+}
 </script>
 <script type="module" src="src/main.js"></script>
 </body>
