@@ -84,14 +84,11 @@ function addOrderMarkers(pickupLocation, dropoffLocation) {
         .addTo(map);
 
     // Adjust map bounds
-<<<<<<< HEAD
    
-=======
     const bounds = new mapboxgl.LngLatBounds();
     bounds.extend([pickupLng, pickupLat]);
     bounds.extend([dropoffLng, dropoffLat]);
     map.fitBounds(bounds, { padding: 100 });
->>>>>>> bd1a66d (rider fixes #5)
 
     getRoute({ x: pickupLat, y: pickupLng }, { x: dropoffLat, y: dropoffLng });
 }
