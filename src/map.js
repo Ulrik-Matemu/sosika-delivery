@@ -4,6 +4,9 @@ let orderDetails;
 let pickupMarker = null;
 let dropoffMarker = null;
 
+
+
+
 console.log(deliveryPersonId);
 socket.emit("joinDelivery", deliveryPersonId);
 
@@ -16,38 +19,10 @@ function showNotification(order) {
 // New Order Event
 socket.on("newOrderAvailable", (data) => {
     console.log("New order received:", data);
-    orderDetails = data;
-    showNotification(data);
 });
 
 // Accept Order
-window.acceptOrder = function() {
-    console.log("Order accepted");
-    document.getElementById("btn-acc-dec").style.display = "none";
-    document.getElementById("btn-acc-dec2").style.display = "none";
-    document.getElementById("btn-acc-dec3").style.display = "none";
 
-    socket.emit("acceptOrder", { orderId: orderDetails.orderId, deliveryPersonId });
-
-    fetch(`https://sosika-backend.onrender.com/api/orders/${orderDetails.orderId}/accept`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ delivery_person_id: deliveryPersonId }),
-    })
-        .then((response) => response.json().then((data) => ({ status: response.status, body: data })))
-        .then(({ status, body }) => {
-            if (status === 400) {
-                alert(body.error);
-            } else if (status === 404) {
-                alert("Order not found. It may have been assigned to another delivery person.");
-            } else {
-                console.log("Order accepted:", body);
-                localStorage.setItem("assignedOrder", JSON.stringify(orderDetails));
-                addOrderMarkers(orderDetails.pickup_location, orderDetails.dropoff_location);
-            }
-        })
-        .catch((error) => console.error("Error:", error));
-}
 
 // Pickup and Dropoff Marker Elements
 const pickupDiv = document.createElement("div");
@@ -58,15 +33,47 @@ dropOffDiv.innerHTML = `<div style="background-color: Red; color: white; padding
 
 // Add Order Markers
 function addOrderMarkers(pickupLocation, dropoffLocation) {
+    if (!pickupLocation || !dropoffLocation) {
+        console.error("Missing pickup or dropoff location:", { pickupLocation, dropoffLocation });
+        return;
+    }
     removeOrderMarkers(); // Clear previous markers
 
-    // Parse coordinates from string
-    const [pickupLat, pickupLng] = pickupLocation.replace(/[()]/g, '').split(',').map(Number);
-    const [dropoffLat, dropoffLng] = dropoffLocation.replace(/[()]/g, '').split(',').map(Number);
+    
+
+    function parseLocationString(str) {
+        const match = str.match(/\((-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)\)/);
+        if (!match) return null;
+    
+        const lat = parseFloat(match[1]);
+        const lng = parseFloat(match[3]);
+        return { lat, lng };
+    }
+    
+
+    console.log(parseLocationString(pickupLocation));
+
+    const pickup = parseLocationString(pickupLocation);
+    const dropoff = parseLocationString(dropoffLocation);
+    // Use object properties directly
+    const pickupLng = pickup.lng;
+    const pickupLat = pickup.lat;
+    const dropoffLng = dropoff.lng;
+    const dropoffLat = dropoff.lat;
+
+    function isValidCoord(lat, lng) {
+        return typeof lat === "number" && typeof lng === "number" && !isNaN(lat) && !isNaN(lng);
+    }
+
+    if (!isValidCoord(pickupLat, pickupLng) || !isValidCoord(dropoffLat, dropoffLng)) {
+        console.error("Invalid coordinates:", { pickupLat, pickupLng, dropoffLat, dropoffLng });
+        return;
+    }
+
 
     // Add Pickup Marker
     pickupMarker = new mapboxgl.Marker({ element: pickupDiv })
-        .setLngLat([pickupLng, pickupLat]) // Fixed lat/lng order
+        .setLngLat([pickupLng, pickupLat])
         .setPopup(new mapboxgl.Popup().setText("Pickup location"))
         .addTo(map);
 
@@ -77,10 +84,18 @@ function addOrderMarkers(pickupLocation, dropoffLocation) {
         .addTo(map);
 
     // Adjust map bounds
+<<<<<<< HEAD
    
+=======
+    const bounds = new mapboxgl.LngLatBounds();
+    bounds.extend([pickupLng, pickupLat]);
+    bounds.extend([dropoffLng, dropoffLat]);
+    map.fitBounds(bounds, { padding: 100 });
+>>>>>>> bd1a66d (rider fixes #5)
 
     getRoute({ x: pickupLat, y: pickupLng }, { x: dropoffLat, y: dropoffLng });
 }
+
 
 function removeRoute() {
     if (map.getLayer('route')) {
@@ -176,19 +191,38 @@ socket.on("orderCompleted", (data) => {
     alert(`Order ${data.orderId} is marked as completed.`);
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    let orderLocations = localStorage.getItem("orderLocations");
+    orderLocations = JSON.parse(orderLocations);
+    if (orderLocations?.pickup_location && orderLocations?.dropoff_location) {
+        addOrderMarkers(orderLocations.pickup_location, orderLocations.dropoff_location);
+    } else {
+        console.warn("No valid orderLocations found in localStorage");
+    }
+
+    
+    if (orderLocations) {
+        console.log("Restoring order locations from localStorage:", orderLocations);
+        addOrderMarkers(orderLocations.pickup_location, orderLocations.dropoff_location);
+    }
+});
+
 // Check Order Status on Page Load
 document.addEventListener("DOMContentLoaded", function () {
+    let orderLocations = localStorage.getItem("orderLocations");
+    orderLocations = JSON.parse(orderLocations);
     async function checkOrderStatus() {
         const savedOrder = localStorage.getItem("assignedOrder");
-        console.log(savedOrder);
+        const id = orderLocations.orderId;
 
-        if (savedOrder) {
+        if (savedOrder || orderLocations) {
             let orderDetails = JSON.parse(savedOrder);
 
             try {
                 // Fetch latest order status from backend
                 console.log(orderDetails);
-                const response = await fetch(`https://sosika-backend.onrender.com/api/orders/${orderDetails.orderId}`);
+                console.log(orderLocations.orderId);
+                const response = await fetch(`https://sosika-backend.onrender.com/api/orders/${id}`);
                 const latestOrder = await response.json();
                 console.log(latestOrder);
 
@@ -198,12 +232,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log("Order completed. Removing from localStorage.");
                     removeOrderMarkers();
                     localStorage.removeItem("assignedOrder");
+                    localStorage.removeItem("pickUp");
+                    localStorage.removeItem("dropOff");
                     location.reload();
                 } else if (latestOrder.order_status === "in_progress") {
                     console.log("Order status changed back to 'in_progress'. Alerting delivery person.");
                     alert("Order status changed back to 'In-Progress'. Please check your assigned orders.");
                     removeOrderMarkers();
                     localStorage.removeItem("assignedOrder");
+                    location.reload();
+                } else if (latestOrder.order_status === "cancelled") {
+                    alert("Order has been cancelled");
+                    removeOrderMarkers();
+                    localStorage.removeItem("orderLocations");
                     location.reload();
                 } else {
                     console.log("Restoring assigned order:", orderDetails);

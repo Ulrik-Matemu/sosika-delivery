@@ -13,6 +13,13 @@
     </div>
 
     <script>
+        const socket = io("https://sosika-backend.onrender.com");
+
+        socket.on("orderAssigned", (data) => {
+            localStorage.setItem("assignedOrder", data);
+            showNotification(data);
+        })
+
         document.addEventListener("DOMContentLoaded", async function () {
             const ordersContainer = document.getElementById("orders-list");
             const deliveryPersonId = localStorage.getItem("deliveryPersonId");
@@ -60,8 +67,10 @@
                     });
                     const data = await response.json();
                     if (response.ok) {
-                        alert("Order accepted successfully");
-                        fetchUnassignedOrders();
+                        console.log(data);
+                        localStorage.setItem("orderLocations", JSON.stringify(data));
+                        alert("Order accepted successfully here");
+                       
                     } else {
                         alert(data.error || "Failed to accept order");
                     }

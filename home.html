@@ -17,7 +17,7 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-   
+
     <style>
         body,
         html {
@@ -51,12 +51,13 @@
 
     <div class="navigation">
         <div class="navigation-container">
-            <div class="add" onclick="navigateProfile()">
-                <div class="add-icon">
-                    <i class="fa fa-user"></i>
+            <a href="orders.html">
+                <div class="add">
+                    <div class="add-icon">
+                        <i class="fa fa-history"></i>
+                    </div>
                 </div>
-
-            </div>
+            </a>
             <div class="home" onclick="navigateHome()">
                 <div class="home-icon">
                     <i class="fa fa-home"></i>
@@ -70,67 +71,67 @@
 
             </div>
         </div>
-        
+
         <script>
-              mapboxgl.accessToken = 'pk.eyJ1IjoiLS11bHJpa2siLCJhIjoiY203YzV5dHIyMGY3NjJqc2Q5MmpxNm4ycCJ9.TilyKOmKcw2ekL2PY8Xofw';
-              let map = document.getElementById('map'); // Global map instance
+            mapboxgl.accessToken = 'pk.eyJ1IjoiLS11bHJpa2siLCJhIjoiY203YzV5dHIyMGY3NjJqc2Q5MmpxNm4ycCJ9.TilyKOmKcw2ekL2PY8Xofw';
+            let map = document.getElementById('map'); // Global map instance
 
 
-// Store the marker instance
+            // Store the marker instance
 
-function showLocationOnMap() {
-    if (!navigator.geolocation) {
-        console.error('Geolocation is not supported by your browser');
-        return;
-    }
+            function showLocationOnMap() {
+                if (!navigator.geolocation) {
+                    console.error('Geolocation is not supported by your browser');
+                    return;
+                }
 
-    console.log('Getting location...');
+                console.log('Getting location...');
 
-    navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const { latitude, longitude } = position.coords;
 
-        if (!map) {
-            // Initialize the map only if it doesn't exist
-            map = new mapboxgl.Map({
-                container: 'map',
-                style: 'mapbox://styles/mapbox/streets-v11',
-                center: [longitude, latitude],
-                zoom: 13
-            });
+                    if (!map) {
+                        // Initialize the map only if it doesn't exist
+                        map = new mapboxgl.Map({
+                            container: 'map',
+                            style: 'mapbox://styles/mapbox/streets-v11',
+                            center: [longitude, latitude],
+                            zoom: 13
+                        });
 
-            marker = new mapboxgl.Marker()
-                .setLngLat([longitude, latitude])
-                .setPopup(new mapboxgl.Popup().setText('Your Location'))
-                .addTo(map);
-        } else {
-            // If map exists, smoothly pan to the new location
-            map.flyTo({
-                center: [longitude, latitude],
-                zoom: 17,
-                essential: true
-            });
+                        marker = new mapboxgl.Marker()
+                            .setLngLat([longitude, latitude])
+                            .setPopup(new mapboxgl.Popup().setText('Your Location'))
+                            .addTo(map);
+                    } else {
+                        // If map exists, smoothly pan to the new location
+                        map.flyTo({
+                            center: [longitude, latitude],
+                            zoom: 17,
+                            essential: true
+                        });
 
-            if (marker) {
-                marker.setLngLat([longitude, latitude]);
-            } else {
-                marker = new mapboxgl.Marker()
-                    .setLngLat([longitude, latitude])
-                    .setPopup(new mapboxgl.Popup().setText('Your Location'))
-                    .addTo(map);
+                        if (marker) {
+                            marker.setLngLat([longitude, latitude]);
+                        } else {
+                            marker = new mapboxgl.Marker()
+                                .setLngLat([longitude, latitude])
+                                .setPopup(new mapboxgl.Popup().setText('Your Location'))
+                                .addTo(map);
+                        }
+                    }
+                }, (error) => {
+                    console.error('Error getting location:', error);
+                });
             }
-        }
-    }, (error) => {
-        console.error('Error getting location:', error);
-    });
-}
         </script>
     </div>
     <script src="https://sosika-backend.onrender.com/socket.io/socket.io.js"></script>
-   
+
     <script src="src/toggle-active.js" type="module"></script>
     <script src="src/map.js" type="module"></script>
     <script>
-        
+
     </script>
 </body>
 
