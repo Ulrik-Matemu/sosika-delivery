@@ -12,7 +12,9 @@ socket.emit("joinDelivery", deliveryPersonId);
 
 // Function to show notification
 function showNotification(order) {
+    console.log("Showing notification for order:", order);
     document.getElementById("orderNumber").textContent = order.orderId;
+    document.getElementById("foodieNumber").textContent = order.phoneNumber;
     document.getElementById("orderNotification").style.display = "block";
 }
 
@@ -193,6 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
     orderLocations = JSON.parse(orderLocations);
     if (orderLocations?.pickup_location && orderLocations?.dropoff_location) {
         addOrderMarkers(orderLocations.pickup_location, orderLocations.dropoff_location);
+        showNotification(orderLocations.orderId);
     } else {
         console.warn("No valid orderLocations found in localStorage");
     }
@@ -201,6 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (orderLocations) {
         console.log("Restoring order locations from localStorage:", orderLocations);
         addOrderMarkers(orderLocations.pickup_location, orderLocations.dropoff_location);
+        showNotification(orderLocations.orderId);
     }
 });
 
@@ -244,8 +248,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     localStorage.removeItem("orderLocations");
                     location.reload();
                 } else {
-                    console.log("Restoring assigned order:", orderDetails);
+                    console.log("Restoring assigned order:", orderLocations);
                     addOrderMarkers(latestOrder.pickup_location, latestOrder.dropoff_location);
+                    showNotification(orderLocations);
                 }
             } catch (error) {
                 console.error("Error fetching order status:", error);
